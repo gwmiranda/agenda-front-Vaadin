@@ -166,7 +166,7 @@ public class AgendaTelefônicaView extends Div implements BeforeEnterObserver{
                         }
                     }else{
                         pessoa.setContato(getListContatos(pessoa));
-                        if(pessoaService.salvar(pessoa)){
+                        if(pessoaService.alterar(pessoa)){
                             Notification.show("Alterado");
                             removerCamposContatos();
                         }else{

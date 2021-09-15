@@ -1,8 +1,5 @@
 package com.example.application.data.entity;
 
-import javax.persistence.*;
-
-@Embeddable
 public class Contato{
 
     private Integer contato;
@@ -19,5 +16,12 @@ public class Contato{
 
     public void setContato(java.lang.Integer contato) {
         this.contato = contato;
+    }
+
+    @Override
+    public String toString() {
+        return "Contato{" +
+                "contato=" + contato +
+                '}';
     }
 }

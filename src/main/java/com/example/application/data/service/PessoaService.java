@@ -1,31 +1,35 @@
 package com.example.application.data.service;
 
 import com.example.application.data.entity.Pessoa;
-import com.example.application.data.repository.PessoaRepository;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PessoaService{
 
-    private PessoaRepository pessoaRepository;
+    private RestTemplate template;
+    private String URL = "http://localhost:8081/pessoa/";
 
-    public PessoaService(PessoaRepository pessoaRepository) { this.pessoaRepository = pessoaRepository; }
-
-    public boolean salvar(Pessoa pessoa){
+    public boolean salvar(Pessoa pessoa) {
         try {
-            pessoaRepository.save(pessoa);
+            template = new RestTemplate();
+            template.postForEntity(URL, pessoa, Pessoa.class);
             return true;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return false;
         }
     }
 
     public boolean deletar(Pessoa pessoa){
         try {
-            pessoaRepository.deleteById(pessoa.getId());
+            template = new RestTemplate();
+            template.delete(URL + pessoa.getId());
             return true;
         }catch (Exception ex){
             System.out.println(ex.getMessage());
@@ -34,13 +38,27 @@ public class PessoaService{
     }
 
     public List<Pessoa> listarPessoas() {
-        List<Pessoa> pessoas = (List<Pessoa>) pessoaRepository.findAll();
+        template = new RestTemplate();
+        ResponseEntity<Pessoa[]> entity = template.getForEntity(URL ,Pessoa[].class);
+        List<Pessoa> pessoas = Arrays.asList(entity.getBody());
         return pessoas;
     }
 
-    public Pessoa getPessoaID(java.lang.Integer id){
-        Optional<Pessoa>  pessoaOptional = pessoaRepository.findById(id);
-        Pessoa pessoa = pessoaOptional.get();
+    public Pessoa getPessoaID(Integer id){
+        template = new RestTemplate();
+        ResponseEntity<Pessoa> entity = template.getForEntity(URL + id, Pessoa.class);
+        Pessoa pessoa = entity.getBody();
         return pessoa;
+    }
+
+    public boolean alterar(Pessoa pessoa){
+        try {
+            template = new RestTemplate();
+            HttpEntity<Pessoa> update = new HttpEntity<>(pessoa);
+            template.exchange(URL + pessoa.getId(), HttpMethod.PUT, update, Pessoa.class);
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
     }
 }

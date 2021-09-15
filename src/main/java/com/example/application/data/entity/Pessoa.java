@@ -1,25 +1,15 @@
 package com.example.application.data.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
 public class Pessoa {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private java.lang.Integer id;
+    private Integer id;
     private String nome;
     private String sobrenome;
     private String parentesco;
     private LocalDate nascimento;
-    @ElementCollection
-    @CollectionTable(name = "contato", joinColumns = @JoinColumn(name = "pessoa_id"))
-    @Fetch( FetchMode.JOIN)
     private List<Contato> contatos;
 
     public Pessoa(){}
@@ -35,6 +25,10 @@ public class Pessoa {
 
     public java.lang.Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -77,4 +71,15 @@ public class Pessoa {
         this.contatos = contatos;
     }
 
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", sobrenome='" + sobrenome + '\'' +
+                ", parentesco='" + parentesco + '\'' +
+                ", nascimento=" + nascimento +
+                ", contatos=" + contatos +
+                '}';
+    }
 }
